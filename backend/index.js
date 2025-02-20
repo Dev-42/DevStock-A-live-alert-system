@@ -3,7 +3,9 @@ const express = require("express");
 const mongoose = require("mongoose");
 const nodemailer = require("nodemailer");
 const cors = require("cors");
-const User = require("../backend/models/User.model");
+const jwt = require("jsonwebtoken");
+const UserOTP = require("./models/UserOTP.model");
+const User = require("./models/User.model");
 
 const app = express();
 app.use(express.json());
@@ -31,10 +33,14 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// Function to generate a 6-digit OTP
+// Function to generate OTP
 const generateOTP = () =>
   Math.floor(100000 + Math.random() * 900000).toString();
 
+// Function to generate JWT Token
+const generateJWT = (email) => {
+  return jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: "1h" });
+};
 // 📌 API: Send OTP to User's Email
 app.post("/send-otp", async (req, res) => {
   try {
@@ -45,7 +51,7 @@ app.post("/send-otp", async (req, res) => {
     const otpExpiresAt = new Date(Date.now() + 5 * 60000); // Expires in 5 minutes
 
     // Store OTP in MongoDB (update if user exists)
-    await User.findOneAndUpdate(
+    await UserOTP.findOneAndUpdate(
       { email },
       { otp, otpExpiresAt },
       { upsert: true, new: true }
@@ -72,19 +78,28 @@ app.post("/verify-otp", async (req, res) => {
     if (!email || !otp)
       return res.status(400).json({ message: "Email and OTP are required" });
 
-    const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ message: "User not found" });
+    const userOTP = await UserOTP.findOne({ email });
+    if (!userOTP) return res.status(400).json({ message: "User not found" });
 
-    if (user.otp !== otp)
+    if (userOTP.otp !== otp)
       return res.status(400).json({ message: "Invalid OTP" });
 
-    if (new Date() > user.otpExpiresAt)
+    if (new Date() > userOTP.otpExpiresAt)
       return res.status(400).json({ message: "OTP expired" });
 
-    // OTP is valid; delete OTP from the database
-    await User.findOneAndUpdate({ email }, { otp: null, otpExpiresAt: null });
+    // OTP is valid ✅, Store user in the Verified Users collection
+    let user = await User.findOne({ email });
+    if (!user) {
+      user = await User.create({ email }); // Create new verified user
+    }
 
-    res.json({ message: "OTP verified successfully!" });
+    // Delete OTP from database
+    // await UserOTP.deleteOne({ email });
+
+    // Generate JWT Token
+    const token = generateJWT(email);
+
+    res.json({ message: "OTP verified successfully!", token });
   } catch (err) {
     res
       .status(500)
