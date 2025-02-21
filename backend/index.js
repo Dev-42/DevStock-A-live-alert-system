@@ -6,9 +6,14 @@ const cors = require("cors");
 const jwt = require("jsonwebtoken");
 const UserOTP = require("./models/UserOTP.model");
 const User = require("./models/User.model");
+// const bcrypt = require("bcryptjs");
+const cookieParser = require("cookie-parser");
+const authenticateUser = require("./middleware/auth.middleware");
 
 const app = express();
 app.use(express.json());
+app.use(cookieParser());
+
 app.use(cors());
 
 // Connect to MongoDB
@@ -42,7 +47,7 @@ const generateJWT = (email) => {
   return jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: "1h" });
 };
 // 📌 API: Send OTP to User's Email
-app.post("/send-otp", async (req, res) => {
+app.post("/signup", async (req, res) => {
   try {
     const { email } = req.body;
     if (!email) return res.status(400).json({ message: "Email is required" });
@@ -72,7 +77,7 @@ app.post("/send-otp", async (req, res) => {
 });
 
 // 📌 API: Verify OTP
-app.post("/verify-otp", async (req, res) => {
+app.post("/login", async (req, res) => {
   try {
     const { email, otp } = req.body;
     if (!email || !otp)
@@ -98,12 +103,33 @@ app.post("/verify-otp", async (req, res) => {
 
     // Generate JWT Token
     const token = generateJWT(email);
+    // Set token in HTTP-only cookie
+    res.cookie("authCookie", token, {
+      httpOnly: true,
+      maxAge: 3600000, // 1 hour
+    });
 
     res.json({ message: "OTP verified successfully!", token });
   } catch (err) {
     res
       .status(500)
       .json({ message: "Error verifying OTP", error: err.message });
+  }
+});
+
+// Logout Route - Clears cookie
+app.post("/logout", (req, res) => {
+  res.clearCookie("authCookie");
+  res.json({ message: "Logged out successfully" });
+});
+
+app.get("/profile", authenticateUser, async (req, res) => {
+  try {
+    res.status(200).json(req.user);
+  } catch (err) {
+    res
+      .status(500)
+      .json({ message: "Error fetching profile", error: err.message });
   }
 });
 
