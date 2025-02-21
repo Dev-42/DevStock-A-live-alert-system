@@ -44,7 +44,7 @@ const generateOTP = () =>
 
 // Function to generate JWT Token
 const generateJWT = (email) => {
-  return jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: "1h" });
+  return jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: "24h" });
 };
 // 📌 API: Send OTP to User's Email
 app.post("/signup", async (req, res) => {
@@ -106,7 +106,7 @@ app.post("/login", async (req, res) => {
     // Set token in HTTP-only cookie
     res.cookie("authCookie", token, {
       httpOnly: true,
-      maxAge: 3600000, // 1 hour
+      maxAge: 86400000, // 1 day
     });
 
     res.json({ message: "OTP verified successfully!", token });

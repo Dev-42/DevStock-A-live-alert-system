@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
+const User = require("../models/User.model");
 
-const authenticateUser = (req, res, next) => {
+const authenticateUser = async (req, res, next) => {
   const token =
     req.headers.authorization?.split(" ")[1] || req.cookies.authCookie;
 
@@ -10,7 +11,8 @@ const authenticateUser = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // Attach user data to request
+    const user = await User.findOne({ email: decoded.email });
+    req.user = user; // Attach user data to request
     next(); // Proceed to the next middleware
   } catch (err) {
     res.status(401).json({ message: "Invalid or expired token" });
