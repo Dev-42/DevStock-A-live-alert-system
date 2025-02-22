@@ -4,13 +4,43 @@ const WebSocket = require("ws");
 const FINNHUB_API_KEY = process.env.FINNHUB_API_KEY;
 const FINNHUB_WS_URL = `wss://ws.finnhub.io?token=${FINNHUB_API_KEY}`;
 
-const getStockPrice = async (symbol) => {
-  const url = `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${FINNHUB_API_KEY}`;
-  const response = await axios.get(url);
-  return response.data || { message: "Stock not found" };
+const getStockDetails = async (symbol) => {
+  try {
+    // Fetch stock quote
+    const quoteUrl = `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${FINNHUB_API_KEY}`;
+    const quoteResponse = await axios.get(quoteUrl);
+
+    // Fetch stock profile (company name & logo)
+    const profileUrl = `https://finnhub.io/api/v1/stock/profile2?symbol=${symbol}&token=${FINNHUB_API_KEY}`;
+    const profileResponse = await axios.get(profileUrl);
+
+    if (!quoteResponse.data || !profileResponse.data) {
+      throw new Error("Invalid stock data received");
+    }
+
+    // Check if real-time data is available
+    const isMarketOpen =
+      quoteResponse.data.c !== null && quoteResponse.data.c !== undefined;
+
+    const stockData = {
+      symbol,
+      companyName: profileResponse.data.name || "Unknown",
+      logo: profileResponse.data.logo || "",
+      currentPrice: isMarketOpen ? quoteResponse.data.c : quoteResponse.data.pc,
+      previousClose: quoteResponse.data.pc,
+      message: isMarketOpen
+        ? "Real-time data available"
+        : "Markets are closed, showing last closed price",
+    };
+
+    return stockData;
+  } catch (error) {
+    console.error("Error fetching stock details:", error.message);
+    return { error: "Unable to fetch stock details" };
+  }
 };
 
-// WebSocket Function to stream real-time prices
+// WebSocket function to stream real-time prices
 const connectStockWebSocket = (symbol, callback) => {
   const ws = new WebSocket(FINNHUB_WS_URL);
 
@@ -30,4 +60,4 @@ const connectStockWebSocket = (symbol, callback) => {
   return ws;
 };
 
-module.exports = { getStockPrice, connectStockWebSocket };
+module.exports = { getStockDetails, connectStockWebSocket };
