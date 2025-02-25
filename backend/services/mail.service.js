@@ -11,10 +11,16 @@ const transporter = nodemailer.createTransport({
 });
 
 exports.sendOTPEmail = async (email, otp) => {
-  await transporter.sendMail({
-    from: `"DevTech Solutions" <${process.env.SMTP_USER}>`,
-    to: email,
-    subject: "Your OTP Code",
-    text: `Your OTP code is ${otp}. It expires in 5 minutes.`,
-  });
+  try {
+    const info = await transporter.sendMail({
+      from: `"DevTech Solutions" <${process.env.SMTP_USER}>`,
+      to: email,
+      subject: "Your OTP Code",
+      text: `Your OTP code is ${otp}. It expires in 5 minutes.`,
+    });
+
+    console.log(`📧 OTP Email sent successfully: ${info.response}`);
+  } catch (error) {
+    console.error(`❌ Error sending OTP email to ${email}:`, error.message);
+  }
 };
