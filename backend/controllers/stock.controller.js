@@ -85,7 +85,13 @@ exports.setStockAlert = async (req, res) => {
     await newAlert.save();
 
     // Send confirmation email
-    await sendEmailAlert(email, symbol, price, stockDetails.currentPrice);
+    await sendEmailAlert(
+      email,
+      symbol,
+      price,
+      stockDetails.currentPrice,
+      (type = "setup")
+    );
 
     return res.status(201).json({
       message: "Stock alert set successfully. Confirmation email sent.",
