@@ -92,7 +92,7 @@ const Cover = () => {
 
         {/* Animated Button */}
         <motion.button
-          className="mt-5 flex items-center gap-3 px-7 py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-lg font-bold rounded-full shadow-xl hover:shadow-purple-500/50 transition-all duration-300"
+          className="mt-5 flex items-center gap-3 px-7 py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-lg font-bold rounded-full shadow-xl hover:shadow-purple-500/50 transition-all duration-300 cursor-pointer"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           whileHover={{
