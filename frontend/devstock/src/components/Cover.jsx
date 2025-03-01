@@ -2,6 +2,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { AiOutlineArrowRight } from "react-icons/ai";
+import { FaRegUserCircle } from "react-icons/fa";
 
 const Cover = () => {
   return (
@@ -16,6 +17,20 @@ const Cover = () => {
         muted
         playsInline
       />
+
+      {/* Login Button */}
+      <motion.button
+        className="absolute top-5 right-5 sm:top-8 sm:right-8 flex items-center justify-center p-3 text-white transition-all duration-300"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        whileHover={{
+          scale: 1.2,
+          filter: "drop-shadow(0px 0px 10px rgba(255,255,255,0.6))",
+        }}
+        whileTap={{ scale: 0.95 }}
+      >
+        <FaRegUserCircle className="text-3xl sm:text-4xl drop-shadow-xl cursor-pointer" />
+      </motion.button>
 
       {/* Centered Content */}
       <div className="absolute inset-0 flex flex-col items-center justify-center text-white text-center px-4 sm:px-8">
@@ -48,47 +63,9 @@ const Cover = () => {
           initial={{ opacity: 0, y: 20, letterSpacing: "-0.02em" }}
           animate={{ opacity: 1, y: 0, letterSpacing: "0.05em" }}
           transition={{ delay: 0.3, duration: 1, ease: "easeOut" }}
-          whileHover={{
-            textShadow: "0px 0px 10px rgba(255, 255, 255, 0.6)",
-            scale: 1.05,
-          }}
         >
-          AI-powered stock insights at your fingertips{" "}
-          <motion.span
-            animate={{ rotate: [0, 10, -10, 0] }}
-            transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
-          >
-            🚀
-          </motion.span>{" "}
-          <motion.span
-            animate={{ y: [0, -5, 0] }}
-            transition={{ repeat: Infinity, duration: 1.2, ease: "easeInOut" }}
-          >
-            📈
-          </motion.span>
+          AI-powered stock insights at your fingertips 🚀 📈
         </motion.p>
-
-        {/* Glowing Divider */}
-        <motion.div
-          className="w-24 sm:w-36 h-1 bg-gradient-to-r from-yellow-400 to-orange-600 mx-auto my-3 sm:my-4 rounded-full shadow-md"
-          initial={{ scaleX: 0 }}
-          animate={{
-            scaleX: [1, 0.5, 1], // Expanding & collapsing effect
-            opacity: [0.8, 1, 0.8], // Glowing effect
-            boxShadow: [
-              "0px 0px 10px rgba(255, 195, 0, 0.5)",
-              "0px 0px 20px rgba(255, 195, 0, 0.8)",
-              "0px 0px 10px rgba(255, 195, 0, 0.5)",
-            ],
-          }}
-          transition={{
-            repeat: Infinity,
-            duration: 2,
-            ease: "easeInOut",
-          }}
-          whileHover={{ scaleY: 1.5 }}
-          whileTap={{ scaleX: 0.8 }}
-        />
 
         {/* Animated Button */}
         <motion.button
@@ -100,9 +77,8 @@ const Cover = () => {
             boxShadow: "0px 0px 15px rgba(216, 99, 247, 0.8)",
           }}
           whileTap={{ scale: 0.95 }}
-          transition={{ type: "spring", stiffness: 200 }}
         >
-          Get Started{" "}
+          Get Started
           <motion.span
             animate={{ x: [0, 5, 0] }}
             transition={{ repeat: Infinity, duration: 0.8 }}
