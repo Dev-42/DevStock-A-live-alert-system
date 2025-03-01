@@ -5,10 +5,10 @@ import { AiOutlineArrowRight } from "react-icons/ai";
 
 const Cover = () => {
   return (
-    <div className="fixed top-0 left-0 w-screen h-screen overflow-hidden -z-10">
+    <div className="fixed inset-0 w-full h-full overflow-hidden -z-10">
       {/* Background Video */}
       <video
-        className="absolute top-1/2 left-1/2 w-screen h-screen object-cover transform -translate-x-1/2 -translate-y-1/2"
+        className="absolute inset-0 w-full h-full object-cover"
         src="/stockVideo.mp4"
         type="video/mp4"
         autoPlay
@@ -18,10 +18,10 @@ const Cover = () => {
       />
 
       {/* Centered Content */}
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center text-white">
+      <div className="absolute inset-0 flex flex-col items-center justify-center text-white text-center px-4 sm:px-8">
         {/* Main Heading */}
         <motion.h1
-          className="text-5xl font-extrabold tracking-wide bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-orange-600"
+          className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-wide bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-orange-600"
           initial={{ opacity: 0, y: -50, letterSpacing: "-0.05em" }}
           animate={{ opacity: 1, y: 0, letterSpacing: "0.05em" }}
           transition={{ duration: 1, ease: "easeOut" }}
@@ -44,7 +44,7 @@ const Cover = () => {
 
         {/* Subheading */}
         <motion.p
-          className="mt-3 text-lg text-gray-200 tracking-wide"
+          className="mt-3 text-sm sm:text-lg text-gray-200 tracking-wide max-w-md sm:max-w-lg lg:max-w-2xl"
           initial={{ opacity: 0, y: 20, letterSpacing: "-0.02em" }}
           animate={{ opacity: 1, y: 0, letterSpacing: "0.05em" }}
           transition={{ delay: 0.3, duration: 1, ease: "easeOut" }}
@@ -70,7 +70,7 @@ const Cover = () => {
 
         {/* Glowing Divider */}
         <motion.div
-          className="w-36 h-1 bg-gradient-to-r from-yellow-400 to-orange-600 mx-auto my-4 rounded-full shadow-md"
+          className="w-24 sm:w-36 h-1 bg-gradient-to-r from-yellow-400 to-orange-600 mx-auto my-3 sm:my-4 rounded-full shadow-md"
           initial={{ scaleX: 0 }}
           animate={{
             scaleX: [1, 0.5, 1], // Expanding & collapsing effect
@@ -92,12 +92,12 @@ const Cover = () => {
 
         {/* Animated Button */}
         <motion.button
-          className="mt-5 flex items-center gap-3 px-7 py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-lg font-bold rounded-full shadow-xl hover:shadow-purple-500/50 transition-all duration-300 cursor-pointer"
+          className="mt-5 flex items-center gap-2 sm:gap-3 px-5 sm:px-7 py-3 sm:py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-base sm:text-lg font-bold rounded-full shadow-lg hover:shadow-purple-500/50 transition-all duration-300 cursor-pointer"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           whileHover={{
-            scale: 1.15,
-            boxShadow: "0px 0px 20px rgba(216, 99, 247, 0.8)",
+            scale: 1.1,
+            boxShadow: "0px 0px 15px rgba(216, 99, 247, 0.8)",
           }}
           whileTap={{ scale: 0.95 }}
           transition={{ type: "spring", stiffness: 200 }}
@@ -107,7 +107,7 @@ const Cover = () => {
             animate={{ x: [0, 5, 0] }}
             transition={{ repeat: Infinity, duration: 0.8 }}
           >
-            <AiOutlineArrowRight className="text-2xl" />
+            <AiOutlineArrowRight className="text-xl sm:text-2xl" />
           </motion.span>
         </motion.button>
       </div>
