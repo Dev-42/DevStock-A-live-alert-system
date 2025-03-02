@@ -57,6 +57,7 @@ const Cover = () => {
             </motion.span>
           ))}
         </motion.h1>
+        {/* Hello */}
 
         {/* Subheading */}
         <motion.p
