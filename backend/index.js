@@ -10,7 +10,12 @@ const stockRoutes = require("./routes/stock.routes");
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors());
+app.use(
+  cors({
+    origin: ["https://devstock-eight.vercel.app", "http://localhost:3000"],
+    credentials: true,
+  })
+);
 
 // Connect to MongoDB
 mongoose
