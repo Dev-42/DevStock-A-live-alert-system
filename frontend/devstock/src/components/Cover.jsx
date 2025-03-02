@@ -1,10 +1,47 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { AiOutlineArrowRight } from "react-icons/ai";
 import { FaRegUserCircle } from "react-icons/fa";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Cover = () => {
+  const [user, setUser] = useState(null);
+  const router = useRouter();
+
+  // useEffect(() => {
+  //   const fetchProfile = async () => {
+  //     try {
+  //       const response = await axios.get(
+  //         "https://devstock.onrender.com/user/profile"
+  //       );
+  //       setUser(response.data);
+  //     } catch (error) {
+  //       setUser(null);
+  //     }
+  //   };
+  //   fetchProfile();
+  // }, []);
+  const handleAuth = () => {
+    if (!user) {
+      router.push("/auth/register");
+    } else {
+      router.push("/profile");
+    }
+  };
+  const handleLogout = async () => {
+    try {
+      await axios.post("https://devstock.onrender.com/user/logout", {});
+      setUser(null);
+      toast.success("Logged out successfully");
+      router.push("/auth/login");
+    } catch (err) {
+      toast.error("Logout failed");
+    }
+  };
   return (
     <div className="fixed inset-0 w-full h-full overflow-hidden -z-10">
       {/* Background Video */}
@@ -87,6 +124,7 @@ const Cover = () => {
             boxShadow: "0px 0px 20px rgba(216, 99, 247, 0.9)",
           }}
           whileTap={{ scale: 0.95 }}
+          onClick={user ? handleLogout : handleAuth}
         >
           Get Started
           <motion.span
